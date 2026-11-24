@@ -33,8 +33,8 @@ glowing ring on a single orbital clock.
 
 ### 🪐 Orbital clock with a master control
 Each timer is a concentric ring that drains in real time. The "black hole" center shows
-whichever timer finishes next; tap it to play or pause every timer at once (shown at the top).
-Each card also has its own play, reset and delete controls.
+whichever timer finishes next, and the whole clock is one big button: tap it to play or pause
+every timer at once (shown at the top). Each timer also has its own play, reset and delete controls.
 
 <p align="center">
   <img src="docs/play-single-timer.gif" alt="Starting one timer from its card while its ring drains on the clock" width="100%" />
@@ -61,6 +61,14 @@ When a timer finishes, the alarm keeps ringing until you acknowledge it, so it c
 
 <p align="center">
   <img src="docs/timer-complete.gif" alt="A finished timer showing the Timer Complete alert, dismissed with the Acknowledge button" width="100%" />
+</p>
+
+### 📱 Made for phones too
+On large screens timers are full cards. On phones they collapse into a compact list, with each
+block's progress drawn along the row's bottom edge, and the clock scales down to fit above them.
+
+<p align="center">
+  <img src="docs/mobile.png" alt="MultiClock on a phone: a smaller orbital clock above a compact list of timer rows" width="320" />
 </p>
 
 ### Under the hood

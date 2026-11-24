@@ -173,77 +173,141 @@ export default function TimerCard({ timer }: { timer: Timer }) {
   const nextCheckpoint = checkpoints.find((cp) => cp > elapsed);
   const untilCheckpoint = nextCheckpoint ? nextCheckpoint - elapsed : 0;
 
+  const fills = blockFill(timer.intervals, checkpoints, elapsed);
+  const shell = `transition-all ${
+    isDeleting ? "opacity-50 pointer-events-none" : ""
+  }`;
+
+  const dot = (
+    <span
+      className="size-2.5 lg:size-3 rounded-full shrink-0"
+      style={{
+        backgroundColor: timer.color,
+        boxShadow: isRunning ? `0 0 10px ${timer.color}` : "none",
+      }}
+    />
+  );
+
+  // Shared by both layouts. When complete, rows keep the play slot (`disabled:invisible`)
+  // so columns stay aligned; the card drops it (`disabled:hidden`).
+  const controls = (btn: string, icon: string, whenDone: string) => (
+    <>
+      <button
+        onClick={isRunning ? pause : start}
+        disabled={timeLeft === 0}
+        aria-label={isRunning ? "Pause" : "Play"}
+        title={isRunning ? "Pause" : "Play"}
+        className={`${btn} bg-white/10 hover:bg-white/20 text-white ${whenDone}`}>
+        {isRunning ? <Pause className={icon} /> : <Play className={icon} />}
+      </button>
+      <button
+        onClick={reset}
+        aria-label="Reset"
+        title="Reset"
+        className={`${btn} bg-white/5 hover:bg-white/20 text-gray-300`}>
+        <RotateCcw className={icon} />
+      </button>
+      <button
+        onClick={handleDelete}
+        aria-label="Delete timer"
+        title="Delete Timer"
+        className={`${btn} bg-red-500/10 hover:bg-red-600 hover:text-white text-red-500`}>
+        <X className={icon} />
+      </button>
+    </>
+  );
+
   return (
-    <div
-      className={`p-5 rounded-2xl border transition-all relative ${
-        isRunning
-          ? "bg-neutral-900 border-white/40 shadow-lg"
-          : "bg-black/40 border-white/10 hover:border-white/20"
-      } ${isDeleting ? "opacity-50 pointer-events-none" : ""}`}>
-      <div className="flex justify-between items-start mb-4 gap-3">
-        <div className="min-w-0">
-          <h4 className="font-bold text-lg flex items-center gap-2 capitalize">
-            <span
-              className="w-3 h-3 rounded-full shrink-0"
-              style={{
-                backgroundColor: timer.color,
-                boxShadow: isRunning ? `0 0 10px ${timer.color}` : "none",
-              }}
-            />
-            <span className="truncate">{timer.label}</span>
-          </h4>
-          <p className="text-xs text-gray-500 mt-1 uppercase tracking-wider">
-            Total: {formatClock(timer.duration)}
-          </p>
-        </div>
-
-        <div className="flex gap-2 sm:gap-3 shrink-0">
-          {timeLeft > 0 && (
-            <button
-              onClick={isRunning ? pause : start}
-              aria-label={isRunning ? "Pause" : "Play"}
-              className="bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg transition-all cursor-pointer">
-              {isRunning ? <Pause className="size-4" /> : <Play className="size-4" />}
-            </button>
-          )}
-          <button
-            onClick={reset}
-            aria-label="Reset"
-            title="Reset"
-            className="bg-white/5 hover:bg-white/20 text-gray-300 px-3 py-2 rounded-lg transition-all cursor-pointer">
-            <RotateCcw className="size-4" />
-          </button>
-          <button
-            onClick={handleDelete}
-            aria-label="Delete timer"
-            title="Delete Timer"
-            className="bg-red-500/10 hover:bg-red-600 hover:text-white text-red-500 px-3 py-2 rounded-lg transition-all cursor-pointer">
-            <X className="size-4" />
-          </button>
-        </div>
-      </div>
-
-      <div className="mb-4 text-4xl font-extrabold tabular-nums tracking-tighter">
-        {formatClock(timeLeft)}
-      </div>
-
-      <div className="bg-black/50 rounded-lg p-3 border border-white/5">
-        {timeLeft === 0 ? (
-          <p className="text-sm font-semibold text-green-400">Timer Complete!</p>
-        ) : untilCheckpoint > 0 && !isSingleInterval ? (
-          <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-400">Next checkpoint in:</span>
-            <span className="font-mono font-bold text-indigo-300">
-              {formatClock(untilCheckpoint)}
-            </span>
+    <>
+      {/* Small screens: a slim list row. The block progress bar is its bottom border. */}
+      <div
+        className={`lg:hidden relative overflow-hidden rounded-lg border border-b-0 ${shell} ${
+          isRunning
+            ? "bg-neutral-900 border-white/30 shadow-lg"
+            : "bg-black/40 border-white/10 hover:border-white/20"
+        }`}>
+        <div className="flex items-center gap-3 px-3 pt-2 pb-2.5 sm:px-4">
+          {dot}
+          <div className="min-w-0 flex-1">
+            <h4 className="font-semibold text-sm sm:text-base capitalize truncate">
+              {timer.label}
+            </h4>
+            <p className="text-[11px] text-gray-500 uppercase tracking-wider truncate">
+              {formatClock(timer.duration)}
+              {timeLeft === 0 ? (
+                <span className="text-green-400 font-semibold"> · Complete</span>
+              ) : untilCheckpoint > 0 && !isSingleInterval ? (
+                <>
+                  {" · Next "}
+                  <span className="font-mono font-bold text-indigo-300">
+                    {formatClock(untilCheckpoint)}
+                  </span>
+                </>
+              ) : null}
+            </p>
           </div>
-        ) : (
-          <p className="text-sm text-gray-500">No upcoming checkpoints</p>
-        )}
+          <div className="text-xl sm:text-2xl font-extrabold tabular-nums tracking-tighter shrink-0">
+            {formatClock(timeLeft)}
+          </div>
+          <div className="flex gap-1 shrink-0">
+            {controls("size-7 sm:size-8 flexbox rounded-md transition-all cursor-pointer", "size-3.5", "disabled:invisible")}
+          </div>
+        </div>
 
-        <div className="flex gap-1 mt-3 h-1.5 w-full rounded-full overflow-hidden">
-          {blockFill(timer.intervals, checkpoints, elapsed).map((fill, idx) => {
-            return (
+        <div className="absolute inset-x-0 bottom-0 flex gap-0.5 h-0.75" aria-hidden>
+          {fills.map((fill, idx) => (
+            <div key={idx} className="h-full flex-1 bg-white/10 relative overflow-hidden">
+              <div
+                className="absolute inset-y-0 left-0 transition-all duration-1000 ease-linear"
+                style={{ width: `${fill}%`, backgroundColor: timer.color }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Large screens: the full card. */}
+      <div
+        className={`hidden lg:block p-5 rounded-2xl border relative ${shell} ${
+          isRunning
+            ? "bg-neutral-900 border-white/40 shadow-lg"
+            : "bg-black/40 border-white/10 hover:border-white/20"
+        }`}>
+        <div className="flex justify-between items-start mb-4 gap-3">
+          <div className="min-w-0">
+            <h4 className="font-bold text-lg flex items-center gap-2 capitalize">
+              {dot}
+              <span className="truncate">{timer.label}</span>
+            </h4>
+            <p className="text-xs text-gray-500 mt-1 uppercase tracking-wider">
+              Total: {formatClock(timer.duration)}
+            </p>
+          </div>
+          <div className="flex gap-2 shrink-0">
+            {controls("px-3 py-2 rounded-lg transition-all cursor-pointer", "size-4", "disabled:hidden")}
+          </div>
+        </div>
+
+        <div className="mb-4 text-4xl font-extrabold tabular-nums tracking-tighter">
+          {formatClock(timeLeft)}
+        </div>
+
+        <div className="bg-black/50 rounded-lg p-3 border border-white/5">
+          {timeLeft === 0 ? (
+            <p className="text-sm font-semibold text-green-400">Timer Complete!</p>
+          ) : untilCheckpoint > 0 && !isSingleInterval ? (
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-gray-400">Next checkpoint in:</span>
+              <span className="font-mono font-bold text-indigo-300">
+                {formatClock(untilCheckpoint)}
+              </span>
+            </div>
+          ) : (
+            <p className="text-sm text-gray-500">No upcoming checkpoints</p>
+          )}
+
+          <div className="flex gap-1 mt-3 h-1.5 w-full rounded-full overflow-hidden">
+            {fills.map((fill, idx) => (
               <div
                 key={idx}
                 className="h-full flex-1 bg-white/20 relative overflow-hidden rounded-full">
@@ -252,10 +316,10 @@ export default function TimerCard({ timer }: { timer: Timer }) {
                   style={{ width: `${fill}%`, backgroundColor: timer.color }}
                 />
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

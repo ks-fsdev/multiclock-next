@@ -57,45 +57,70 @@ export default function Dashboard() {
 
   return (
     <div className="w-full max-w-4xl mx-auto lg:px-6 pb-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* List on small screens, the two-column card grid from lg up. */}
+      <div className="flex flex-col gap-2 lg:grid lg:grid-cols-2 lg:gap-6">
         {timers.map((timer) => (
           <TimerCard key={timer.id} timer={timer} />
         ))}
 
         {timers.length === 0 && (
-          <button
-            onClick={() => setIsFormOpen(true)}
-            className="text-left bg-[#181818] border-2 border-dashed border-white/10 rounded-2xl p-6 flex flex-col cursor-pointer hover:border-white/30 hover:bg-[#202020] transition-all group">
-            <div className="flex justify-between items-start mb-4 w-full">
-              <div>
-                <h3 className="text-xl font-bold text-gray-500 group-hover:text-gray-300 transition-colors">
-                  Add a timer
-                </h3>
-                <p className="text-xs text-gray-600 mt-1">
-                  Ready for configuration
-                </p>
+          <>
+            {/* Empty state as a list row (small screens). */}
+            <button
+              onClick={() => setIsFormOpen(true)}
+              className="lg:hidden text-left border-2 border-dashed border-white/10 rounded-lg px-3 pt-2 pb-2.5 sm:px-4 cursor-pointer hover:border-white/30 hover:bg-white/2 transition-all group">
+              <div className="flex items-center gap-3">
+                <span className="size-2.5 rounded-full border border-gray-600/70 group-hover:border-gray-400 transition-colors shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-semibold text-sm sm:text-base text-gray-500 group-hover:text-gray-300 transition-colors">
+                    Add a timer
+                  </h4>
+                  <p className="text-[11px] text-gray-600 uppercase tracking-wider">
+                    Ready for configuration
+                  </p>
+                </div>
+                <span className="text-xl sm:text-2xl font-light tabular-nums tracking-widest doto-font text-white/10 group-hover:text-white/30 transition-colors shrink-0">
+                  00 00
+                </span>
+                <span className="bg-white/5 border border-dashed border-white/10 text-gray-500 px-2.5 py-1 rounded-md text-xs font-bold group-hover:bg-white/10 group-hover:text-white transition-colors shrink-0">
+                  + Configure
+                </span>
               </div>
-              <div className="w-4 h-4 rounded-full border border-gray-600/70 group-hover:border-gray-400 transition-colors" />
-            </div>
+            </button>
 
-            <div className="text-5xl font-light tracking-widest tabular-nums text-white/10 doto-font group-hover:text-white/30 transition-colors">
-              00 00
-            </div>
+            {/* Empty state as the "ghost" card (large screens). */}
+            <button
+              onClick={() => setIsFormOpen(true)}
+              className="hidden lg:flex text-left bg-[#181818] border-2 border-dashed border-white/10 rounded-2xl p-6 flex-col cursor-pointer hover:border-white/30 hover:bg-[#202020] transition-all group">
+              <div className="flex justify-between items-start mb-4 w-full">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-500 group-hover:text-gray-300 transition-colors">
+                    Add a timer
+                  </h3>
+                  <p className="text-xs text-gray-600 mt-1">Ready for configuration</p>
+                </div>
+                <div className="w-4 h-4 rounded-full border border-gray-600/70 group-hover:border-gray-400 transition-colors" />
+              </div>
 
-            <div className="flex gap-1 mt-3 h-1.5 w-full rounded-full bg-white/5" />
+              <div className="text-5xl font-light tracking-widest tabular-nums text-white/10 doto-font group-hover:text-white/30 transition-colors">
+                00 00
+              </div>
 
-            <div className="flex flex-wrap gap-2 sm:gap-3 mt-6 w-full">
-              <div className="bg-white/5 border border-dashed border-white/10 text-gray-500 px-4 py-2.5 sm:py-2 rounded-lg text-sm font-bold flex-1 sm:flex-none text-center group-hover:bg-white/10 group-hover:text-white transition-colors">
-                + Configure
+              <div className="flex gap-1 mt-3 h-1.5 w-full rounded-full bg-white/5" />
+
+              <div className="flex flex-wrap gap-3 mt-6 w-full">
+                <div className="bg-white/5 border border-dashed border-white/10 text-gray-500 px-4 py-2 rounded-lg text-sm font-bold text-center group-hover:bg-white/10 group-hover:text-white transition-colors">
+                  + Configure
+                </div>
+                <div className="border border-dashed border-white/5 px-4 py-2 rounded-lg text-sm text-transparent select-none">
+                  ↺
+                </div>
+                <div className="border border-dashed border-white/5 px-4 py-2 rounded-lg text-sm text-transparent select-none">
+                  ✕
+                </div>
               </div>
-              <div className="border border-dashed border-white/5 px-4 py-2.5 sm:py-2 rounded-lg text-sm text-transparent select-none">
-                ↺
-              </div>
-              <div className="border border-dashed border-white/5 px-4 py-2.5 sm:py-2 rounded-lg text-sm text-transparent select-none">
-                ✕
-              </div>
-            </div>
-          </button>
+            </button>
+          </>
         )}
       </div>
     </div>

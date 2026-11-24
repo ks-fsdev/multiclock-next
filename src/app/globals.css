@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --color-brand-black: #121212;
+  --color-brand-gray: #1e1e1e;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-black text-white font-sans;
+  }
+}
+
+@layer components {
+  .doto-font {
+    font-family: var(--font-doto), monospace;
+    font-variation-settings: "ROND" 0;
+  }
+
+  .flexbox {
+    @apply flex justify-center items-center;
+  }
+
+  .intro-button {
+    @apply w-full sm:w-auto px-10 py-3.5 rounded-full tracking-wide cursor-pointer text-center;
+  }
+
+  .glass-panel {
+    @apply bg-brand-black/70 backdrop-blur-md border-b border-white/5;
+  }
+
+  .field-label {
+    @apply block text-xs font-semibold uppercase tracking-widest text-gray-500;
+  }
+
+  .field-input {
+    @apply w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none transition-all;
+  }
+
+  .toast-default {
+    @apply bg-[#181818]! text-white! border border-neutral-800 rounded-sm shadow-lg;
+  }
+}
+
+/* Hidden scrollbars on the scrolling panels */
+.touch-no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.touch-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Remove number input spinners */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}

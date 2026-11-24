@@ -13,9 +13,11 @@
   <img src="https://img.shields.io/badge/Zod-3E67B1?style=for-the-badge&logo=zod&logoColor=white" alt="Zod" />
 </p>
 
----
+<p align="center">
+  <img src="docs/play-all.gif" alt="Several timers draining as concentric rings on the orbital clock, all started at once from the center button" width="100%" />
+</p>
 
-<!-- Demo: drop a GIF or video here, e.g. ![MultiClock demo](docs/demo.gif) -->
+---
 
 ## About
 
@@ -23,13 +25,47 @@ MultiClock tracks several independent countdown timers at once. Each timer can b
 time blocks ("bifurcated"), with an alarm at every checkpoint, and every timer is drawn as a
 glowing ring on a single orbital clock.
 
-### Features
+<p align="center">
+  <img src="docs/dashboard.png" alt="The MultiClock dashboard: the orbital clock beside four timer cards, each with its countdown and per-block progress bar" width="100%" />
+</p>
 
-- **Orbital SVG clock:** each timer is a concentric ring that drains in real time.
-- **The "black hole" center:** shows whichever timer finishes next; tap it to play or pause everything.
-- **Time blocks:** split a timer into sub-intervals with per-block progress bars and checkpoint alarms.
+## Features
+
+### 🪐 Orbital clock with a master control
+Each timer is a concentric ring that drains in real time. The "black hole" center shows
+whichever timer finishes next; tap it to play or pause every timer at once (shown at the top).
+Each card also has its own play, reset and delete controls.
+
+<p align="center">
+  <img src="docs/play-single-timer.gif" alt="Starting one timer from its card while its ring drains on the clock" width="100%" />
+</p>
+
+### ➕ Build timers from time blocks
+Name a timer, pick its ring color, and stack up as many blocks as you need. The total runtime
+updates as you go, and colors already in use are locked out.
+
+<p align="center">
+  <img src="docs/add-timer.gif" alt="Creating a timer: entering a label, choosing a color, adding time blocks and saving" width="100%" />
+</p>
+
+### 🔔 Checkpoint alarms
+At the end of every block, an alarm plays and a toast announces the next block, while the
+block's progress bar fills in.
+
+<p align="center">
+  <img src="docs/checkpoint.gif" alt="A checkpoint alarm toast appearing as a timer moves to its next block" width="100%" />
+</p>
+
+### ✅ Completion that waits for you
+When a timer finishes, the alarm keeps ringing until you acknowledge it, so it can't be missed.
+
+<p align="center">
+  <img src="docs/timer-complete.gif" alt="A finished timer showing the Timer Complete alert, dismissed with the Acknowledge button" width="100%" />
+</p>
+
+### Under the hood
 - **Drift-free timing:** countdowns are computed from wall-clock deadlines, so throttled background tabs stay accurate.
-- **Custom authentication:** email/password accounts with no third-party auth provider.
+- **Custom authentication:** email/password accounts with no third-party auth provider (see [below](#how-authentication-works)).
 
 ## Tech stack
 
